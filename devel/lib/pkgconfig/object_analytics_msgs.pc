@@ -1,0 +1,8 @@
+prefix=/home/cerlab/wallcrawler/devel
+
+Name: object_analytics_msgs
+Description: Description of object_analytics_msgs
+Version: 0.3.0
+Cflags: -I/home/cerlab/wallcrawler/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_generation std_msgs sensor_msgs geometry_msgs

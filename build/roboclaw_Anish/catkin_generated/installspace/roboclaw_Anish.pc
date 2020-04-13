@@ -1,0 +1,8 @@
+prefix=/home/cerlab/wallcrawler/install
+
+Name: roboclaw_Anish
+Description: Description of roboclaw_Anish
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

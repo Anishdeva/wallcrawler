@@ -1,0 +1,434 @@
+<?xml version="1.0"?>
+<robot name="wallcrawler2">
+    <!-- Define material (colors) -->
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.2 0.2 0.2 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="0.8 0 0 1"/>
+    </material>
+
+    <!-- Define base link (Choosing center segment) -->
+    <link name="base_link">
+        <visual>
+        <geometry>
+            <box size="0.184 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.184 0.1 0.05"/>
+        </geometry>
+        </collision>
+        <inertial>
+        <mass value="0.531"/>
+        <inertia ixx="5687.833" ixy="14.061" ixz="0.00" iyy="288.26" iyz="0.00" izz="5624.56"/>        
+        </inertial>                
+    </link>
+
+    <!-- Wheels attached to base/central link -->
+    <link name="right_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+      <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>                
+    </link>
+
+    <joint name="base_to_right_wheel" type="revolute">
+        <axis xyz="1 0 0" rpy="0 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="right_wheel"/>
+        <origin xyz="0.092 0.0 0.0"/>
+    </joint>
+
+   
+    <link name="left_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>                
+    </link>
+
+    <joint name="base_to_left_wheel" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="left_wheel"/>
+        <origin xyz="-0.092 0.0 0.0"/>
+    </joint>
+
+    <!-- linkage to segment at the front -->
+
+    <link name="base_to_front_link1">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        </collision>
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="77.34" ixy="0.00" ixz="0.00" iyy="77.34" iyz="0.00" izz="14.06"/>
+        </inertial>
+        
+    </link>
+
+    <joint name="b2flink1_to_baselink" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="base_to_front_link1"/>
+        <origin xyz="0 0.05 0"/>
+    </joint>
+
+
+    <link name="front_link2">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </visual>
+        <collision>
+       <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </collision>
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="77.34" ixy="0.00" ixz="0.00" iyy="77.34" iyz="0.00" izz="14.06"/>
+        </inertial>          
+    </link>
+
+    <joint name="b2flink1_to_link2" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_to_front_link1"/>
+        <child link="front_link2"/>
+        <origin xyz="0 0.06 0"/>
+    </joint>
+
+        <!-- linkage to segment at the back -->
+
+    <link name="base_to_back_link1">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="77.34" ixy="0.00" ixz="0.00" iyy="77.34" iyz="0.00" izz="14.06"/>
+        </inertial>        
+    </link>
+
+    <joint name="b2blink1_to_baselink" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="base_to_back_link1"/>
+        <origin xyz="0 -0.05 0"/>
+    </joint>
+
+
+    <link name="back_link2">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </collision>
+        <inertial>
+         <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="77.34" ixy="0.00" ixz="0.00" iyy="77.34" iyz="0.00" izz="14.06"/>
+        </inertial>         
+    </link>
+
+    <joint name="b2blink1_to_link2" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_to_back_link1"/>
+        <child link="back_link2"/>
+        <origin xyz="0 -0.055 0"/>
+    </joint>
+
+    <!-- Front segment -->
+    <link name="front_segment">
+        <visual>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        <origin xyz="0 0.05 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <origin xyz="0 0.05 0"/>
+        </collision> 
+        <inertial>
+        <origin xyz="0 0.05 0"/>
+        <mass value="0.30"/>
+        <inertia ixx="3564.563" ixy="0.00" ixz="0.00" iyy="977.27" iyz="0.00" izz="2671.66"/>
+        </inertial>       
+    </link>
+
+    <joint name="link2_to_front_segment" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="front_link2"/>
+        <child link="front_segment"/>
+        <origin xyz="0 0.0275 0"/>
+    </joint>
+
+<!-- Wheels attached to front segment -->
+    <link name="right_wheel_front">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>       
+    </link>
+
+    <joint name="front_to_right_wheel" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="front_segment"/>
+        <child link="right_wheel_front"/>
+        <origin xyz="0.122 0.05 0.0"/>
+    </joint>
+
+   
+    <link name="left_wheel_front">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>       
+    </link>
+
+    <joint name="front_to_left_wheel" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="front_segment"/>
+        <child link="left_wheel_front"/>
+        <origin xyz="-0.122 0.05 0.0"/>
+    </joint>
+
+    <!-- Back segment -->
+    <link name="back_segment">
+        <visual>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        <origin xyz="0 -0.05 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <origin xyz="0 -0.05 0"/>
+        </collision>
+        <inertial>
+        <origin xyz="0 -0.05 0"/>
+        <mass value="0.30"/>
+        <inertia ixx="3564.563" ixy="0.00" ixz="0.00" iyy="977.27" iyz="0.00" izz="2671.66"/>
+        </inertial>        
+    </link>
+
+    <joint name="link2_to_back_segment" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="back_link2"/>
+        <child link="back_segment"/>
+        <origin xyz="0 -0.0275 0"/>
+    </joint>
+
+<!-- Wheels attached to Back segment -->
+    <link name="right_wheel_back">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>        
+    </link>
+
+    <joint name="back_to_right_wheel" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="back_segment"/>
+        <child link="right_wheel_back"/>
+        <origin xyz="0.122 -0.05 0.0"/>
+    </joint>
+
+   
+    <link name="left_wheel_back">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="1026.482" ixy="0" ixz="0" iyy="0" iyz="1933.441" izz="1026.482"/>
+        </inertial>         
+    </link>
+
+    <joint name="back_to_left_wheel" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="back_segment"/>
+        <child link="left_wheel_back"/>
+        <origin xyz="-0.122 -0.05 0.0"/>
+    </joint>
+
+    <!-- Transmissions - for all not-fixed joints-->
+        <!-- linkages-4 -->
+            <!-- base to back link, back link, base to front link, front link : revolute joints-->
+       
+
+        <!-- Wheels-6 -->
+
+    <transmission name="${prefix}_${suffix}_wheel_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <actuator name="${prefix}_${suffix}_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+      <joint name="${prefix}_${suffix}_wheel_joint">
+        <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      </joint>
+    </transmission>
+
+      <gazebo reference="${prefix}_${suffix}_wheel">
+      <mu1 value="200.0"/>
+      <mu2 value="100.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
+      <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <!-- Gazebo Plugin for ROS Control -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>    
+
+</robot>

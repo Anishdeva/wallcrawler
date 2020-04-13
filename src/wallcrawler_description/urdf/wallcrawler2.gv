@@ -1,0 +1,41 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"base_to_back_link1" [label="base_to_back_link1"];
+"back_link2" [label="back_link2"];
+"back_segment" [label="back_segment"];
+"left_wheel_back" [label="left_wheel_back"];
+"right_wheel_back" [label="right_wheel_back"];
+"base_to_front_link1" [label="base_to_front_link1"];
+"front_link2" [label="front_link2"];
+"front_segment" [label="front_segment"];
+"left_wheel_front" [label="left_wheel_front"];
+"right_wheel_front" [label="right_wheel_front"];
+"left_wheel" [label="left_wheel"];
+"right_wheel" [label="right_wheel"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "b2blink1_to_baselink" [label="xyz: 0 -0.05 0 \nrpy: 0 -0 0"]
+"b2blink1_to_baselink" -> "base_to_back_link1"
+"base_to_back_link1" -> "b2blink1_to_link2" [label="xyz: 0 -0.055 0 \nrpy: 0 -0 0"]
+"b2blink1_to_link2" -> "back_link2"
+"back_link2" -> "link2_to_back_segment" [label="xyz: 0 -0.0275 0 \nrpy: 0 -0 0"]
+"link2_to_back_segment" -> "back_segment"
+"back_segment" -> "back_to_left_wheel" [label="xyz: -0.122 -0.05 0 \nrpy: 0 -0 0"]
+"back_to_left_wheel" -> "left_wheel_back"
+"back_segment" -> "back_to_right_wheel" [label="xyz: 0.122 -0.05 0 \nrpy: 0 -0 0"]
+"back_to_right_wheel" -> "right_wheel_back"
+"base_link" -> "b2flink1_to_baselink" [label="xyz: 0 0.05 0 \nrpy: 0 -0 0"]
+"b2flink1_to_baselink" -> "base_to_front_link1"
+"base_to_front_link1" -> "b2flink1_to_link2" [label="xyz: 0 0.06 0 \nrpy: 0 -0 0"]
+"b2flink1_to_link2" -> "front_link2"
+"front_link2" -> "link2_to_front_segment" [label="xyz: 0 0.0275 0 \nrpy: 0 -0 0"]
+"link2_to_front_segment" -> "front_segment"
+"front_segment" -> "front_to_left_wheel" [label="xyz: -0.122 0.05 0 \nrpy: 0 -0 0"]
+"front_to_left_wheel" -> "left_wheel_front"
+"front_segment" -> "front_to_right_wheel" [label="xyz: 0.122 0.05 0 \nrpy: 0 -0 0"]
+"front_to_right_wheel" -> "right_wheel_front"
+"base_link" -> "base_to_left_wheel" [label="xyz: -0.092 0 0 \nrpy: 0 -0 0"]
+"base_to_left_wheel" -> "left_wheel"
+"base_link" -> "base_to_right_wheel" [label="xyz: 0.092 0 0 \nrpy: 0 -0 0"]
+"base_to_right_wheel" -> "right_wheel"
+}

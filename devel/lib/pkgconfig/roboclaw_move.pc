@@ -1,0 +1,8 @@
+prefix=/home/cerlab/wallcrawler/devel
+
+Name: roboclaw_move
+Description: Description of roboclaw_move
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,13 @@
+<launch>
+
+    <arg name="model" default="$(find home/cerlab/wallcrawler)/src/wallcrawler_description/urdf/wallcrawler.urdf"/>
+    <arg name="gui" default="true" />
+    <arg name="rvizconfig" default="$(find home/cerlab/wallcrawler)/src/wallcrawler_description/urdf/wallcrawler.urdf" />
+   
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  </launch>
