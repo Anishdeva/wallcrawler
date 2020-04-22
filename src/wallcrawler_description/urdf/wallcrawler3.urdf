@@ -158,6 +158,15 @@
         <origin xyz="0 0.06 0"/>
     </joint>
 
+        <!-- torsional spring element -->
+    <gazebo>
+        <plugin name="front_torsional_spring" filename="libgazebo_joint_torsional_spring.so">
+            <kx>0.1</kx>
+            <set_point>0.5</set_point>
+            <joint>b2flink1_to_link2</joint>
+        </plugin>
+    </gazebo>
+
         <!-- linkage to segment at the back -->
 
     <link name="base_to_back_link1">
@@ -218,6 +227,15 @@
         <child link="back_link2"/>
         <origin xyz="0 -0.055 0"/>
     </joint>
+
+        <!-- torsional spring element -->
+    <gazebo>
+        <plugin name="back_torsional_spring" filename="libgazebo_joint_torsional_spring.so">
+            <kx>0.1</kx>
+            <set_point>0.5</set_point>
+            <joint>b2blink1_to_link2</joint>
+        </plugin>
+    </gazebo>
 
     <!-- Front segment -->
     <link name="front_segment">
@@ -406,7 +424,7 @@
 
         <!-- Wheels-6 -->
 
-    <transmission name="${prefix}_${suffix}_wheel_trans">
+    <!-- <transmission name="${prefix}_${suffix}_wheel_trans">
       <type>transmission_interface/SimpleTransmission</type>
       <actuator name="${prefix}_${suffix}_wheel_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -416,13 +434,13 @@
       </joint>
     </transmission>
 
-      <gazebo reference="${prefix}_${suffix}_wheel">
+    <gazebo reference="${prefix}_${suffix}_wheel">
       <mu1 value="200.0"/>
       <mu2 value="100.0"/>
       <kp value="10000000.0" />
       <kd value="1.0" />
       <material>Gazebo/Grey</material>
-    </gazebo>
+    </gazebo> -->
 
     <!-- Gazebo Plugin for ROS Control -->
     <gazebo>

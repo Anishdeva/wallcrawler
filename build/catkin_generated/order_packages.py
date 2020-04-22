@@ -2,4 +2,4 @@
 source_root_dir = "/home/cerlab/wallcrawler/src"
 whitelisted_packages = "".split(';') if "" != "" else []
 blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/home/cerlab/Anish/devel;/home/cerlab/depowdering/devel;/opt/ros/kinetic".split(';') if "/home/cerlab/Anish/devel;/home/cerlab/depowdering/devel;/opt/ros/kinetic" != "" else []
+underlay_workspaces = "/home/cerlab/catkin_ws/devel;/opt/ros/kinetic".split(';') if "/home/cerlab/catkin_ws/devel;/opt/ros/kinetic" != "" else []
