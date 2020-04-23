@@ -127,6 +127,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/cerlab/wallcrawler/build/realsense-ros/realsense2_description/cmake_install.cmake")
   include("/home/cerlab/wallcrawler/build/roboclaw_move/cmake_install.cmake")
+  include("/home/cerlab/wallcrawler/build/gazebo_joint_torsional_spring_plugin/cmake_install.cmake")
   include("/home/cerlab/wallcrawler/build/realsense-ros/realsense2_camera/cmake_install.cmake")
   include("/home/cerlab/wallcrawler/build/roboclaw_ros/roboclaw_node/cmake_install.cmake")
   include("/home/cerlab/wallcrawler/build/wallcrawler_description/cmake_install.cmake")

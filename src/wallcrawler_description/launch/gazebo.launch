@@ -7,7 +7,7 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
-  <arg name="model" default="$(find wallcrawler_description)/urdf/wallcrawler3.urdf"/>
+  <arg name="model" default="$(find wallcrawler_description)/urdf/wallcrawler3.urdf.xacro"/>
 
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
 <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -21,12 +21,30 @@
 
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
 
-  <!-- push robot_description to factory and spawn robot in gazebo -->
+   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
         args="-z 1.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
 
-  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="30.0" />
+
+<!-- Joint state publisher  -->
+  <rosparam command="load"
+            file="$(find wallcrawler_description)/config/joints.yaml"
+            ns="wallcrawler_joint_state_controller" />
+    <!-- Publish robot state --> 
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- differential drive publisher -->
+  <rosparam command="load"
+            file="$(find wallcrawler_description)/config/diffdrive.yaml"
+            ns="wallcrawler_diff_drive_controller" />
+ 
+  <!-- Publish geometry message/Twist from rqt robot steering -->
+  <node name="wallcrawler_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/wallcrawler_diff_drive_controller/cmd_vel"/>
   </node>
+
+  <!-- <node name="SARA_controller manager" pkg="controller_manager" type="spawner"
+      respawn="false" output="screen" args="mobile_base_controller" /> -->
 
 </launch>

@@ -1,2 +1,2 @@
-realsense-ros/realsense2_camera:realsense-ros/realsense2_description:roboclaw_move:roboclaw_ros/roboclaw_node:wallcrawler_description
+gazebo_joint_torsional_spring_plugin:realsense-ros/realsense2_camera:realsense-ros/realsense2_description:roboclaw_move:roboclaw_ros/roboclaw_node:wallcrawler_description
 -DCATKIN_DEVEL_PREFIX=/home/cerlab/wallcrawler/devel -DCMAKE_INSTALL_PREFIX=/home/cerlab/wallcrawler/install -G Unix Makefiles
