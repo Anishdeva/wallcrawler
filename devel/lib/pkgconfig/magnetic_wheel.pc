@@ -1,0 +1,8 @@
+prefix=/home/cerlab/wallcrawler/devel
+
+Name: magnetic_wheel
+Description: Description of magnetic_wheel
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp gazebo_ros

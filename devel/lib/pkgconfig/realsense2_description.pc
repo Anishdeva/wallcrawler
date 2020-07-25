@@ -2,7 +2,7 @@ prefix=/home/cerlab/wallcrawler/devel
 
 Name: realsense2_description
 Description: Description of realsense2_description
-Version: 2.2.12
+Version: 2.2.14
 Cflags: 
 Libs: -L${prefix}/lib 
 Requires: 

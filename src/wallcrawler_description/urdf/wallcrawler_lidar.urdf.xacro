@@ -1,0 +1,548 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wallcrawler_lidar">
+  <xacro:arg name="gpu" default="false"/>
+  <xacro:property name="gpu" value="$(arg gpu)" />
+    <!-- Define material (colors) -->
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.2 0.2 0.2 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="0.8 0 0 1"/>
+    </material>
+
+    <!-- Define base link (Choosing center segment) -->
+    <link name="base_link">
+        <visual>
+        <geometry>
+            <box size="0.184 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.184 0.1 0.05"/>
+        </geometry>
+        </collision>
+        <inertial>
+        <mass value="0.29"/>
+        <inertia ixx="0.001483683" ixy="0.0" ixz="0.00" iyy="0.0004067691" iyz="0.00" izz="0.0011120307"/>        
+        </inertial>                
+    </link>
+
+    <xacro:include filename="$(find wallcrawler_description)/urdf/VLP-16.urdf.xacro"/>
+  <VLP-16 parent="base_link" name="velodyne" topic="/velodyne_points" hz="10" samples="440" gpu="${gpu}">
+    <origin xyz="0 0 0.025" rpy="0 0 0" />
+  </VLP-16>
+
+    <!-- Wheels attached to base/central link -->
+    <link name="center_right_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+      <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>                
+    </link>
+
+    <joint name="center_right_wheel_joint" type="continuous">
+        <axis xyz="1 0 0" rpy="0 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="base_link"/>
+        <child link="center_right_wheel"/>
+        <origin xyz="0.1 0.0 0.0"/>
+    </joint>
+
+    <gazebo reference="center_right_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <transmission name="center_right_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="center_right_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="center_right_wheel_actuator">
+            <mechanicalReduction>7</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+   
+    <link name="center_left_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>                
+    </link>
+
+    <joint name="center_left_wheel_joint" type="continuous">
+        <axis xyz="1 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="base_link"/>
+        <child link="center_left_wheel"/>
+        <origin xyz="-0.1 0.0 0.0"/>
+    </joint>
+
+    <gazebo reference="center_left_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10000000.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <transmission name="center_left_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="center_left_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="center_left_wheel_actuator">
+            <mechanicalReduction>7</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <!-- linkage to segment at the front -->
+
+    <link name="base_to_front_link1">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        </collision>
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 0.01875 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="0.000032190362" ixy="0.00" ixz="0.00" iyy="0.000032190362" iyz="0.00" izz="0.000005852793"/>
+        </inertial>
+        
+    </link>
+
+    <joint name="b2flink1_to_baselink" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="10.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="base_to_front_link1"/>
+        <origin xyz="0 0.05 0"/>
+    </joint>
+
+
+    <link name="front_link2">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </visual>
+        <collision>
+       <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </collision>
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="0.000032190362" ixy="0.00" ixz="0.00" iyy="0.000032190362" iyz="0.00" izz="0.000005852793"/>
+        </inertial>          
+    </link>
+
+    <joint name="b2flink1_to_link2" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="10.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <parent link="base_to_front_link1"/>
+        <child link="front_link2"/>
+        <origin xyz="0 0.06 0"/>
+    </joint>
+
+        <!-- torsional spring element -->
+    <gazebo>
+        <plugin name="front_torsional_spring" filename="libgazebo_joint_torsional_spring.so">
+            <kx>0.1</kx>
+            <set_point>0.0</set_point>
+            <joint>b2flink1_to_link2</joint>
+        </plugin>
+    </gazebo>
+
+        <!-- linkage to segment at the back -->
+
+    <link name="base_to_back_link1">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="1.57 0 0" xyz="0 -0.01875 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="0.000032190362" ixy="0.00" ixz="0.00" iyy="0.000032190362" iyz="0.00" izz="0.000005852793"/>
+        </inertial>        
+    </link>
+
+    <joint name="b2blink1_to_baselink" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="base_link"/>
+        <child link="base_to_back_link1"/>
+        <origin xyz="0 -0.05 0"/>
+    </joint>
+
+
+    <link name="back_link2">
+        <visual>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <material name="white"/>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.0254 0.0254 0.055"/>
+        </geometry>
+        <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        </collision>
+        <inertial>
+         <origin rpy="1.57 0 0" xyz="0 0.0 0"/>
+        <mass value="0.054"/>
+        <inertia ixx="0.000032190362" ixy="0.00" ixz="0.00" iyy="0.000032190362" iyz="0.00" izz="0.000005852793"/>
+        </inertial>         
+    </link>
+
+    <joint name="b2blink1_to_link2" type="revolute">
+        <axis xyz="1 0 0"/>
+        <limit effort="10.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <parent link="base_to_back_link1"/>
+        <child link="back_link2"/>
+        <origin xyz="0 -0.06 0"/>
+    </joint>
+
+        <!-- torsional spring element -->
+    <gazebo>
+        <plugin name="back_torsional_spring" filename="libgazebo_joint_torsional_spring.so">
+            <kx>0.1</kx>
+            <set_point>0.0</set_point>
+            <joint>b2blink1_to_link2</joint>
+        </plugin>
+    </gazebo>
+
+    <!-- Front segment -->
+    <link name="front_base">
+        <visual>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        <origin xyz="0 0.05 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <origin xyz="0 0.05 0"/>
+        </collision> 
+        <inertial>
+        <origin xyz="0 0.05 0"/>
+        <mass value="0.53"/>
+        <inertia ixx="0.0023674548" ixy="0" ixz="0" iyy="0.0001199823" iyz="0.00" izz="0.0023411172"/>
+        </inertial>       
+    </link>
+
+    <joint name="link2_to_front_base" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="10.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="front_link2"/>
+        <child link="front_base"/>
+        <origin xyz="0 0.0275 0"/>
+    </joint>
+
+<!-- Wheels attached to front segment -->
+
+    <link name="front_right_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>       
+    </link>
+
+    <joint name="front_right_wheel_joint" type="continuous">
+        <axis xyz="1 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="front_base"/>
+        <child link="front_right_wheel"/>
+        <origin xyz="0.132 0.05 0.0"/>
+    </joint>
+
+    <gazebo reference="front_right_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <transmission name="front_right_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="front_right_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="front_right_wheel_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+   
+    <link name="front_left_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>       
+    </link>
+
+   <joint name="front_left_wheel_joint" type="continuous">
+        <axis xyz="1 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="front_base"/>
+        <child link="front_left_wheel"/>
+        <origin xyz="-0.132 0.05 0.0"/>
+    </joint>
+    <gazebo reference="front_left_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+ 
+
+    <transmission name="front_left_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="front_left_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="front_left_wheel_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+    
+    <!-- Back segment -->
+    <link name="back_base">
+        <visual>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <material name="red"/>
+        <origin xyz="0 -0.05 0"/>
+        </visual>
+        <collision>
+        <geometry>
+            <box size="0.244 0.1 0.05"/>
+        </geometry>
+        <origin xyz="0 -0.05 0"/>
+        </collision>
+        <inertial>
+        <origin xyz="0 -0.05 0"/>
+        <mass value="0.53"/>
+        <inertia ixx="0.0023674548" ixy="0" ixz="0" iyy="0.0001199823" iyz="0.00" izz="0.0023411172"/>
+        </inertial>        
+    </link>
+
+    <joint name="link2_to_back_base" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/>
+        <parent link="back_link2"/>
+        <child link="back_base"/>
+        <origin xyz="0 -0.0275 0"/>
+    </joint>
+
+<!-- Wheels attached to Back segment -->
+    <link name="back_right_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision> 
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>        
+    </link>
+
+    <gazebo reference="back_right_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <joint name="back_right_wheel_joint" type="continuous">
+        <axis xyz="1 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="back_base"/>
+        <child link="back_right_wheel"/>
+        <origin xyz="0.132 -0.05 0.0"/>
+    </joint>
+
+    <transmission name="back_right_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="back_right_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="back_right_wheel_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+   
+    <link name="back_left_wheel">
+        <visual>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <material name="blue"/>
+        </visual>
+        <collision>
+        <geometry>
+            <cylinder length="0.02" radius="0.051"/>
+        </geometry>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        </collision>
+        <inertial>
+        <origin rpy="0 1.57 0" xyz="0 0.0 0.0"/>
+        <mass value="0.57"/>
+        <inertia ixx="0.0004272539" ixy="0" ixz="0" iyy="0.000804759" iyz="0.00" izz="0.0004272539"/>
+        </inertial>         
+    </link>
+
+    <joint name="back_left_wheel_joint" type="continuous">
+        <axis xyz="1 0 0"/>
+        <!-- <limit effort="1000.0" lower="0.0" upper="0.548" velocity="0.5"/> -->
+        <parent link="back_base"/>
+        <child link="back_left_wheel"/>
+        <origin xyz="-0.132 -0.05 0.0"/>
+    </joint>
+
+    <gazebo reference="back_left_wheel">
+        <mu1 value="200.0"/>
+        <mu2 value="100.0"/>
+        <kp value="10.0"/>
+        <kd value="1.0"/>
+    </gazebo>
+
+    <transmission name="back_left_wheel_transmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="back_left_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="back_left_wheel_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </actuator>
+    </transmission>
+
+    <!-- Transmissions - for all not-fixed joints-->
+        <!-- linkages-4 -->
+            <!-- base to back link, back link, base to front link, front link : revolute joints-->
+       
+
+        <!-- Wheels-6 -->
+
+    <!-- Gazebo Plugin for ROS Control -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>    
+
+</robot>

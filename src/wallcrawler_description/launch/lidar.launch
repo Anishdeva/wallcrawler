@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<launch>
+  <!-- Rviz -->
+  <include file= "$(find wallcrawler_description)/launch/displayurdf.launch" />
+
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" default="false"/>
+  <arg name="world_name" value="$(find wallcrawler_description)/worlds/wallcrawler.world"/>
+
+  <!-- Start gazebo and load the world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <arg name="verbose" value="$(arg verbose)"/>
+    <arg name="world_name" value="$(arg world_name)"/>
+  </include>
+
+  <!-- Spawn the example robot-needed for lidar -->
+  <arg name="gpu" default="false"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find wallcrawler_description)/urdf/wallcrawler_lidar.urdf.xacro' gpu:=$(arg gpu)" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" args="-y -2.0 -urdf -param /robot_description -model example"/>
+
+
+<!-- Differential drive -->
+  <rosparam command="load"
+            file="$(find wallcrawler_description)/config/joints.yaml"
+            ns="wallcrawler_joint_state_controller" />
+  <rosparam command="load"
+            file="$(find wallcrawler_description)/config/diffdrive.yaml"
+            ns="wallcrawler_diff_drive_controller" />
+
+  <node name="wallcrawler_controller_spawner" pkg="controller_manager" type="spawner"
+    args="wallcrawler_joint_state_controller
+          wallcrawler_diff_drive_controller
+          --shutdown-timeout 3"/>
+
+  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/wallcrawler_diff_drive_controller/cmd_vel"/>
+  </node>
+
+</launch>

@@ -181,7 +181,7 @@
         <collision name='collision'>
           <geometry>
             <mesh>
-             <uri>model://testrig/testrig2.dae</uri>
+             <uri>model://testrig/testrig.dae</uri>
             </mesh>
           </geometry> 
         </collision>     
@@ -189,7 +189,7 @@
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>model://testrig/testrig2.dae</uri>
+              <uri>model://testrig/testrig.dae</uri>
               <scale>1 1 1 </scale>
             </mesh>
           </geometry>
